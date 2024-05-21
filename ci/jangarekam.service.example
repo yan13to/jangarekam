@@ -1,0 +1,16 @@
+[Unit]
+Description=Aplikasi untuk merekam webcam atau cctv secara bersamaan
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 /opt/jangarekam/record.py
+WorkingDirectory=/opt/jangarekam
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=your_user
+Group=your_group
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target

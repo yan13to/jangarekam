@@ -1,0 +1,26 @@
+webcams:
+  - name: Webcam 1
+    url: rtsp://your_webcam_1_url
+    group: Indoor
+    segment_duration_min: 15 # Dalam menit
+    max_video_age_days: 10 # Dalam hari
+    output_directory: /path/to/save/videos/webcam1
+    metadata_directory: ./metadata
+    frame_width: 1280
+    frame_height: 720
+    file_format: "mp4"  # Pilihan format file: 'mp4' atau 'avi'
+    retry_count: 3
+    retry_delay: 5
+
+  - name: Webcam 2
+    url: rtsp://your_webcam_2_url
+    group: Outdoor
+    segment_duration_min: 15
+    max_video_age_days: 10
+    output_directory: /path/to/save/videos/webcam2
+    metadata_directory: ./metadata
+    # Tidak mendefinisikan frame_width dan frame_height, akan menggunakan ukuran default
+    file_format: "avi"
+    retry_count: 3
+    retry_delay: 5
+  # Tambahkan webcam lain sesuai kebutuhan
