@@ -81,27 +81,39 @@ WantedBy=multi-user.target
 
 Setelah Anda membuat file unit, pastikan file tersebut memiliki izin yang benar dan kemudian muat ulang konfigurasi `systemd`.
 
-``$ sudo chmod 644 /etc/systemd/system/jangarekam.service``
+```
+sudo chmod 644 /etc/systemd/system/jangarekam.service
+```
 
-``$ sudo systemctl daemon-reload``
+```
+sudo systemctl daemon-reload
+```
 
 ### 3. Aktifkan Service
 
 Hidupkan service dan pastikan service tersebut aktif saat booting.
 
-``$ sudo systemctl start jangarekam.service``
+```
+sudo systemctl start jangarekam.service
+```
 
-``$ sudo systemctl enable jangarekam.service``
+```
+sudo systemctl enable jangarekam.service
+```
 
 ### 4. Periksa Status
 
-``$ sudo systemctl status jangarekam.service``
+```
+sudo systemctl status jangarekam.service
+```
 
 ### 5. Loggin
 
 Jika ingin melihat log dari service ini, gunakan perintah ``journalctl``
 
-``$ journalctl -u record_webcams.service -f``
+```
+journalctl -u jangarekam.service -f
+```
 
 ## Demo video
 https://www.youtube.com/watch?v=O7q_1HXiN7A
