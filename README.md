@@ -22,35 +22,51 @@ Aplikasi ini dirancang dengan tujuan memudahkan pengguna dalam melakukan perekam
 
 Install `python3` dengan perintah dibawah, khusus untuk linux keluarga `debian`
 
-``$ sudo apt install -y python3``
+```
+sudo apt install -y python3
+```
 
 Dapatkan kode `jangarekam` di github dengan url dibawah
 
-``$ git clone git@github.com:yan13to/jangarekam.git``
+```
+git clone git@github.com:yan13to/jangarekam.git
+```
 
 Masuk ke direktori utama
 
-``$ cd jangarekam``
+```
+cd jangarekam
+```
 
 Install paket-paket yang dibutuhkan untuk menjalankan aplikasinya dengan perintah dibawah
 
-``$ pip install -r requirements.txt``
+```
+pip install -r requirements.txt
+```
 
 Copy `webcam_config.yaml.example` ke `webcam_config.yaml`
 
-``$ cp webcam_config.yaml.example webcam_config.yaml``
+```
+cp webcam_config.yaml.example webcam_config.yaml
+```
 
 Ubah file konfigurasi sesuai dengan kebutuhan, kemudian simpan
 
-``$ vim webcam_config.yaml`` 
+```
+vim webcam_config.yaml
+``` 
 
 Ketik perintah dibawah untuk memulai proses perekaman cctv
 
-``$ python3 record.py``
+```
+python3 record.py
+```
 
 Untuk menghentikan perekaman cukup dengan mengetikan perintah
 
-``Ctrl + D``
+```
+Ctrl + D
+```
 
 ## Service
 
