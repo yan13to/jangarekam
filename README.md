@@ -103,4 +103,5 @@ Jika ingin melihat log dari service ini, gunakan perintah ``journalctl``
 
 ``$ journalctl -u record_webcams.service -f``
 
-[![](https://www.youtube.com/watch?v=O7q_1HXiN7A)](https://www.youtube.com/watch?v=O7q_1HXiN7A)
+## Demo video
+https://www.youtube.com/watch?v=O7q_1HXiN7A
