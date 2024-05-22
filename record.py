@@ -27,8 +27,10 @@ def record_rtsp_stream(name, url, group, output_file_prefix, segment_duration_mi
             print(f"FPS: {fps}")
 
             # Mengatur ukuran frame jika ditentukan, atau gunakan ukuran frame default
-            width = frame_width if frame_width is not None else int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-            height = frame_height if frame_height is not None else int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+            original_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+            original_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+            width = frame_width if frame_width is not None else original_width
+            height = frame_height if frame_height is not None else original_height
             print(f"Resolution: {width} x {height}")
 
             # Menentukan codec dan ekstensi file berdasarkan format yang diinginkan
@@ -64,6 +66,10 @@ def record_rtsp_stream(name, url, group, output_file_prefix, segment_duration_mi
                     if not ret:
                         print(f"Error: Tidak dapat membaca frame dari {url}")
                         break
+
+                    # Resize frame if necessary
+                    if frame_width is not None and frame_height is not None:
+                        frame = cv2.resize(frame, (width, height))
 
                     out.write(frame)
                     frame_count += 1
