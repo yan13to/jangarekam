@@ -9,6 +9,7 @@ webcams:
     frame_width: 1280
     frame_height: 720
     file_format: "mp4"  # Pilihan format file: 'mp4' atau 'avi'
+    save_screenshot: true  # Default adalah false
     retry_count: 3
     retry_delay: 5
 
@@ -21,6 +22,7 @@ webcams:
     metadata_directory: ./metadata
     # Tidak mendefinisikan frame_width dan frame_height, akan menggunakan ukuran default
     file_format: "avi"
+    save_screenshot: false  # Default adalah false
     retry_count: 3
     retry_delay: 5
   # Tambahkan webcam lain sesuai kebutuhan

@@ -7,7 +7,7 @@ import os
 import json
 import uuid
 
-def record_rtsp_stream(name, url, group, output_file_prefix, segment_duration_min, max_video_age_days, output_directory, metadata_directory, frame_width, frame_height, file_format, retry_count=3, retry_delay=5):
+def record_rtsp_stream(name, url, group, output_file_prefix, segment_duration_min, max_video_age_days, output_directory, metadata_directory, frame_width, frame_height, file_format, save_screenshot=False, retry_count=3, retry_delay=5):
     try_count = 0
     while try_count < retry_count:
         try:
@@ -75,7 +75,7 @@ def record_rtsp_stream(name, url, group, output_file_prefix, segment_duration_mi
                     frame_count += 1
 
                     # Save the first frame as a screenshot
-                    if not first_frame_saved:
+                    if save_screenshot and not first_frame_saved:
                         screenshot_file = f"{output_file_prefix}_{current_time.strftime('%Y%m%d_%H%M%S')}.png"
                         screenshot_path = os.path.join(group_directory, screenshot_file)
                         cv2.imwrite(screenshot_path, frame)
@@ -99,7 +99,7 @@ def record_rtsp_stream(name, url, group, output_file_prefix, segment_duration_mi
                     "recorded_at": current_time.strftime('%Y-%m-%d %H:%M:%S'),
                     "duration": duration,
                     "full_path": output_path,
-                    "screenshot_path": screenshot_path,
+                    "screenshot_path": screenshot_path if save_screenshot else "",
                     "fps": fps,
                     "resolution": f"{width}x{height}",
                     "file_size": file_size,
@@ -193,6 +193,7 @@ def record_multiple_webcams(config_file):
                 frame_width = webcam.get('frame_width', None)
                 frame_height = webcam.get('frame_height', None)
                 file_format = webcam.get('file_format', 'mp4')  # Default to 'mp4'
+                save_screenshot = webcam.get('save_screenshot', False)  # Default to False
                 retry_count = webcam.get('retry_count', 3)
                 retry_delay = webcam.get('retry_delay', 5)
 
@@ -204,7 +205,7 @@ def record_multiple_webcams(config_file):
 
                 # Create a new thread for each webcam
                 thread = threading.Thread(target=record_rtsp_stream, args=(
-                    name, url, group, name.replace(' ', '_'), segment_duration_min, max_video_age_days, output_directory, metadata_directory, frame_width, frame_height, file_format, retry_count, retry_delay))
+                    name, url, group, name.replace(' ', '_'), segment_duration_min, max_video_age_days, output_directory, metadata_directory, frame_width, frame_height, file_format, save_screenshot, retry_count, retry_delay))
                 thread.start()
                 threads.append(thread)
 
