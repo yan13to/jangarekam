@@ -39,7 +39,7 @@ Aplikasi ini dirancang dengan tujuan memudahkan pengguna dalam melakukan perekam
 Install `python3` dengan perintah dibawah, khusus untuk linux keluarga `debian`
 
 ```
-sudo apt install -y python3
+sudo apt install -y python3 python3-opencv
 ```
 
 Dapatkan kode `jangarekam` di github dengan url dibawah
