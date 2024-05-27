@@ -8,7 +8,48 @@ import json
 import uuid
 from PIL import Image
 
-def record_rtsp_stream(name, url, group, output_file_prefix, segment_duration_min, max_video_age_days, output_directory, metadata_directory, frame_width, frame_height, file_format, save_screenshot=False, retry_count=3, retry_delay=5):
+def log_error(name, url, error_message, error_directory):
+    error_entry = {
+        "id": str(uuid.uuid4()),  # Generate unique ID
+        "name": name,
+        "url": url,
+        "error_message": error_message,
+        "timestamp": datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    }
+
+    error_file = os.path.join(error_directory, 'error.json')
+
+    if os.path.exists(error_file):
+        with open(error_file, 'r') as f:
+            error_data = json.load(f)
+    else:
+        error_data = []
+
+    error_data.append(error_entry)
+
+    with open(error_file, 'w') as f:
+        json.dump(error_data, f, indent=4)
+    print(f"Error logged: {error_file}")
+
+def clean_old_errors(error_directory, max_video_age_days):
+    error_file = os.path.join(error_directory, 'error.json')
+
+    if not os.path.exists(error_file):
+        return
+
+    with open(error_file, 'r') as f:
+        error_data = json.load(f)
+
+    current_time = datetime.now()
+    cutoff_time = current_time - timedelta(days=max_video_age_days)
+
+    error_data = [entry for entry in error_data if datetime.strptime(entry['timestamp'], '%Y-%m-%d %H:%M:%S') >= cutoff_time]
+
+    with open(error_file, 'w') as f:
+        json.dump(error_data, f, indent=4)
+    print(f"Old errors cleaned from: {error_file}")
+
+def record_rtsp_stream(name, url, group, output_file_prefix, segment_duration_min, max_video_age_days, output_directory, metadata_directory, frame_width, frame_height, file_format, save_screenshot=False, retry_count=3, retry_delay=5, error_directory='.'):
     try_count = 0
     while try_count < retry_count:
         try:
@@ -16,7 +57,9 @@ def record_rtsp_stream(name, url, group, output_file_prefix, segment_duration_mi
             cap = cv2.VideoCapture(url)
 
             if not cap.isOpened():
-                print(f"Error: Tidak dapat membuka stream {url}")
+                error_message = f"Error: Tidak dapat membuka stream {url}"
+                print(error_message)
+                log_error(name, url, error_message, error_directory)
                 try_count += 1
                 time.sleep(retry_delay)
                 continue
@@ -65,7 +108,9 @@ def record_rtsp_stream(name, url, group, output_file_prefix, segment_duration_mi
                 while datetime.now() < end_time:
                     ret, frame = cap.read()
                     if not ret:
-                        print(f"Error: Tidak dapat membaca frame dari {url}")
+                        error_message = f"Error: Tidak dapat membaca frame dari {url}"
+                        print(error_message)
+                        log_error(name, url, error_message, error_directory)
                         break
 
                     # Resize frame if necessary
@@ -140,13 +185,19 @@ def record_rtsp_stream(name, url, group, output_file_prefix, segment_duration_mi
 
                 # Delete old videos
                 delete_old_videos(output_file_prefix, max_video_age_days, output_directory, metadata_file)
+                # Delete old errors
+                clean_old_errors(error_directory, max_video_age_days)
 
             if try_count >= retry_count:
-                print(f"Gagal merekam dari {url} setelah {retry_count} kali percobaan.")
+                error_message = f"Gagal merekam dari {url} setelah {retry_count} kali percobaan."
+                print(error_message)
+                log_error(name, url, error_message, error_directory)
                 break
 
         except Exception as e:
-            print(f"Exception occurred while recording from {url}: {e}")
+            error_message = f"Exception occurred while recording from {url}: {e}"
+            print(error_message)
+            log_error(name, url, error_message, error_directory)
             try_count += 1
             time.sleep(retry_delay)
 
@@ -209,9 +260,12 @@ def record_multiple_webcams(config_file):
                 if not os.path.exists(metadata_directory):
                     os.makedirs(metadata_directory)
 
+                # Directory for error logs
+                error_directory = metadata_directory
+
                 # Create a new thread for each webcam
                 thread = threading.Thread(target=record_rtsp_stream, args=(
-                    name, url, group, name.replace(' ', '_'), segment_duration_min, max_video_age_days, output_directory, metadata_directory, frame_width, frame_height, file_format, save_screenshot, retry_count, retry_delay))
+                    name, url, group, name.replace(' ', '_'), segment_duration_min, max_video_age_days, output_directory, metadata_directory, frame_width, frame_height, file_format, save_screenshot, retry_count, retry_delay, error_directory))
                 thread.start()
                 threads.append(thread)
 
