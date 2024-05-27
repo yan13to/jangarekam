@@ -6,6 +6,7 @@ import time
 import os
 import json
 import uuid
+from PIL import Image
 
 def record_rtsp_stream(name, url, group, output_file_prefix, segment_duration_min, max_video_age_days, output_directory, metadata_directory, frame_width, frame_height, file_format, save_screenshot=False, retry_count=3, retry_delay=5):
     try_count = 0
@@ -74,11 +75,16 @@ def record_rtsp_stream(name, url, group, output_file_prefix, segment_duration_mi
                     out.write(frame)
                     frame_count += 1
 
-                    # Save the first frame as a screenshot
+                    # Save the first frame as a compressed screenshot
                     if save_screenshot and not first_frame_saved:
                         screenshot_file = f"{output_file_prefix}_{current_time.strftime('%Y%m%d_%H%M%S')}.png"
                         screenshot_path = os.path.join(group_directory, screenshot_file)
                         cv2.imwrite(screenshot_path, frame)
+                        
+                        # Compress screenshot
+                        with Image.open(screenshot_path) as img:
+                            img.save(screenshot_path, format="PNG", optimize=True, quality=85)
+
                         first_frame_saved = True
 
                 # Calculate duration
