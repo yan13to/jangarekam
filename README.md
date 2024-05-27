@@ -18,6 +18,22 @@ Aplikasi ini dirancang dengan tujuan memudahkan pengguna dalam melakukan perekam
 
 - **Durasi video rekaman bisa di pecah:** Hasil video rekaman bisa di pecah-pecah dalam durasi tertentu. Misalkan per 15 menit, 30 menit, dll
 
+## File konfigurasi `webcam_config.yaml`
+
+- `name`: Nama yang digunakan sebagai pengenal dari kamera atau webcam, misalkan: Kamera garasi samping kiri, atau webcam1
+- `url`: Alamat lengkap dari kamera, protokol yang digunakan adalah RSTP atau streaming dan harus lengkap, misalkan: `rtsp://uname:passwd@xxxx.xxxx.xxxx.xxxx:port_number/cam/realmonitor`
+- `group`: Pengenal untuk pengelompokan kamera, misalkan: Dalam ruangan, Luar ruangan, dll
+- `segment_duration_min`: Lamanya durasi perekaman tiap-tiap video yang dihasilkan, misalkan: 10 menit, 15 menit
+- `max_video_age_days`: Umur video-video yang akan disimpan, misalkan: 10 hari kebelakang, jadi video-video yang direkam lebih dari 10 hari yang lalu akan dihapus, hal ini berguna untuk menyesuaikan dengan penyimpanan yang ada
+- `output_directory`: Lokasi direktori yang akan menyimpan video dari hasil perekaman. misalkan `/opt/jangarekam/videos` atau bisa juga dengan menggunakan lokasi relatif seperti `./videos`, maka akan disimpan di lokasi kode utama berada yang berada di direktori `videos`
+- `metadata_directory`: Lokasi direktori yang menyimpan file `metadata.json`, file ini berisi informasi-informasi yang diambil dari video hasi rekaman
+- `frame_width`: Lebar dari video yang akan direkam dalam bilangan bulat. Jika tidak disertakan maka ukuran ini akan diambil dari setingan yang ada di kamera
+- `frame_height`: Tinggi dari video yang akan direkam dalam bilangan bulat, sama seperti `frame_width`
+- `file_format`: Format video yang akan direkam, saat ini hanya mendukung dua jenis format, yaitu: `mp4` dan `avi`
+- `save_screenshot`: Menangkap dan menyimpan frame pertama dari video yang direkam, jika tidak disertakan akan bernilai `False` atau tidak akan disimpan
+- `retry_count`: Jika ada kesalahan dalam merekam, maka akan dilakukan beberapa kali percobaan untuk merekam ulang, misalkan setelah 5 kali mencoba merekam, maka jangan coba lagi untuk merekam
+- `retry_delay`: Lamanya interval percobaan dalam detik, misalkan: 5, setelah percobaan pertama gagal, maka coba lagi dalam 5 detik kedepan
+
 ## Instalasi
 
 Install `python3` dengan perintah dibawah, khusus untuk linux keluarga `debian`
