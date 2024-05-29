@@ -148,4 +148,49 @@ journalctl -u jangarekam.service -f
 ```
 
 ## Demo video
+
 https://www.youtube.com/watch?v=O7q_1HXiN7A
+
+## Melihat video yang telah direkam
+
+Salah satunya dengan aplikasi `samba`, dengan `samba` video rekaman bisa diakses oleh berbagai platform OS. Untuk melihat video-video yang telah direkam, bisa dilihat di direktori yang telah ditentukan di `webcam_config.yaml` dengan nama output_directory. Misalkan lokasinya di `/home/jangarekam/videos`, maka bisa menggunakan video player yang umum digunakan. Untuk mengakses `samba` bisa menggunakan alamat IP dari server yang menjalankan layanan `samba`.
+
+### Langkah-langkah mengakses video melalui Samba:
+
+**1. Pastikan Samba sudah terinstal dan dikonfigurasi dengan benar di server:**
+
+* Periksa file konfigurasi Samba (`smb.conf`) biasanya terletak di `/etc/samba/smb.conf`.
+* Tambahkan direktori yang ingin dibagikan di file konfigurasi tersebut, misalnya:
+```
+[Videos]
+path = /home/jangarekam/videos
+read only = no
+browsable = yes
+guest ok = yes
+```
+* Restart layanan Samba setelah melakukan perubahan:
+```
+sudo systemctl restart smbd
+```
+**2. Temukan alamat IP dari server:**
+* Bisa dilakukan dengan perintah seperti `ifconfig` atau `ip a` pada server untuk mengetahui alamat IP.
+
+**3. Akses dari komputer klien:**
+* Pada Windows:
+
+  * Buka File Explorer.
+  * Di address bar, ketik `\\<alamat_ip_server>\Videos` dan tekan Enter.
+  * Anda akan melihat daftar video yang bisa diputar menggunakan video player seperti VLC, Windows Media Player, dll.
+
+* Pada Linux:
+  * Buka file manager (misalnya Nautilus atau Thunar).
+  * Di address bar, ketik `smb://<alamat_ip_server>/Videos` dan tekan Enter.
+  * Anda akan melihat daftar video yang bisa diputar menggunakan video player seperti VLC, Totem, dll.
+
+* Pada macOS:
+  * Buka Finder.
+  * Klik "Go" pada menu bar dan pilih "Connect to Server".
+  * Ketik `smb://<alamat_ip_server>/Videos` dan klik "Connect".
+  * Anda akan melihat daftar video yang bisa diputar menggunakan video player seperti VLC, QuickTime Player, dll.
+
+Dengan menggunakan langkah-langkah tersebut, Anda dapat dengan mudah mengakses dan melihat video yang telah direkam melalui berbagai platform OS menggunakan layanan `samba`.
